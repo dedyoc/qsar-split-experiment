@@ -1,0 +1,12 @@
+name: qsar
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - rdkit
+  - scikit-learn
+  - pandas
+  - numpy
+  - matplotlib
+  - requests
+  - tabulate

@@ -1,0 +1,9 @@
+step,n_remaining
+raw activity records,26600
+has SMILES and value,25180
+"IC50, relation '=', units nM",19626
+value > 0,19626
+no ChEMBL validity flag,19361
+RDKit-standardizable,19361
+unique compounds (median-aggregated),10689
+  of which with document_year,10650

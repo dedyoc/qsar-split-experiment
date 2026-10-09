@@ -1,0 +1,17 @@
+[train_eval] run 1/15 random   seed=0 n_train=8551 n_test=2138 RMSE=0.684 R2=0.725 median_maxsim=0.820 (83s)
+[train_eval] run 2/15 random   seed=1 n_train=8551 n_test=2138 RMSE=0.709 R2=0.713 median_maxsim=0.819 (100s)
+[train_eval] run 3/15 random   seed=2 n_train=8551 n_test=2138 RMSE=0.669 R2=0.743 median_maxsim=0.821 (97s)
+[train_eval] run 4/15 random   seed=3 n_train=8551 n_test=2138 RMSE=0.668 R2=0.734 median_maxsim=0.822 (102s)
+[train_eval] run 5/15 random   seed=4 n_train=8551 n_test=2138 RMSE=0.704 R2=0.714 median_maxsim=0.816 (96s)
+[train_eval] run 6/15 scaffold seed=0 n_train=8551 n_test=2138 RMSE=0.786 R2=0.646 median_maxsim=0.731 (99s)
+[train_eval] run 7/15 scaffold seed=1 n_train=8551 n_test=2138 RMSE=0.752 R2=0.643 median_maxsim=0.742 (101s)
+[train_eval] run 8/15 scaffold seed=2 n_train=8551 n_test=2138 RMSE=0.869 R2=0.579 median_maxsim=0.743 (92s)
+[train_eval] run 9/15 scaffold seed=3 n_train=8551 n_test=2138 RMSE=0.764 R2=0.635 median_maxsim=0.742 (86s)
+[train_eval] run 10/15 scaffold seed=4 n_train=8551 n_test=2138 RMSE=0.798 R2=0.635 median_maxsim=0.732 (70s)
+[train_eval] run 11/15 time     seed=0 n_train=9090 n_test=1560 RMSE=1.398 R2=-0.294 median_maxsim=0.506 (68s)
+[train_eval] run 12/15 time     seed=1 n_train=9090 n_test=1560 RMSE=1.397 R2=-0.293 median_maxsim=0.506 (68s)
+[train_eval] run 13/15 time     seed=2 n_train=9090 n_test=1560 RMSE=1.402 R2=-0.302 median_maxsim=0.506 (69s)
+[train_eval] run 14/15 time     seed=3 n_train=9090 n_test=1560 RMSE=1.397 R2=-0.293 median_maxsim=0.506 (69s)
+[train_eval] run 15/15 time     seed=4 n_train=9090 n_test=1560 RMSE=1.393 R2=-0.285 median_maxsim=0.506 (68s)
+[train_eval] done
+[exit code 0]

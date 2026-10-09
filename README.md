@@ -26,7 +26,12 @@ cached in `data/raw/`. Running `python src/fetch.py --force` downloads it again.
 | 4. Split | `src/splits.py` | library: `random_split`, `scaffold_split`, `time_split` |
 | 5. Train/eval | `src/train_eval.py` | 3 splits × 5 seeds → `results/metrics_per_run.csv`, `results/predictions.csv` |
 | 6. Similarity | `src/similarity.py` | → `results/rmse_by_similarity_bin*.csv`, `maxsim_distribution.png`, `rmse_by_simbin.png` |
+| (suppl.) | `src/diagnose_time.py` | assay annotations (cached `data/raw/chembl203_assays.csv`) → `results/time_diag_*.csv` |
 | 7. Report | `src/report.py` | → `results/bang3.csv`, `results/bang3.md`, `split_info.csv`, `rmse_r2_by_split.png` |
+
+`train_eval.py` writes its CSVs after every run and prints one flushed line per run, so progress
+can be followed with `tail -f`. To log a run: `python -u src/train_eval.py > logs/train_eval.log`.
+On 8+ cores each run takes about 70–100 s, roughly 20 minutes for all 15.
 
 All fixed parameters are in `src/config.py`.
 
@@ -73,7 +78,34 @@ hyperparameters are tuned for any split.
   compounds in a run is not scored for that run (`runs_scored` gives the count).
 - **ΔRMSE vs random:** mean RMSE of the split − mean RMSE of the random split.
 
+## Results (run of 2026-10-22, ChEMBL REST, 26,600 raw records → 10,689 compounds)
+
+| Split | RMSE | R² | Median max-Tanimoto test→train | ΔRMSE vs random |
+|---|---|---|---|---|
+| Random | 0.687 ± 0.019 | 0.726 ± 0.013 | 0.82 | — |
+| Scaffold | 0.794 ± 0.046 | 0.628 ± 0.028 | 0.74 | +0.107 (+16%) |
+| Time (train < 2022 ≤ test) | 1.398 ± 0.003 | −0.294 ± 0.006 | 0.51 | +0.711 (+103%) |
+
+The time split drops 39 compounds that have no `document_year`. Because ChEMBL years are lumpy,
+the cutoff closest to 20% gives a **14.6%** test set; a 2021 cutoff would give 28.7%.
+
+- **Random → scaffold.** Test–train similarity falls from 0.82 to 0.74, and RMSE rises by about
+  16%. Within each similarity bin, random and scaffold have nearly the same RMSE (e.g. 0.64 vs
+  0.68 in 0.7–1.0), so the scaffold gap comes mostly from the test set **shifting toward lower
+  similarity bins**. This matches the report's point 5.2.
+- **Time split.** RMSE is high in **every** bin, including 0.7–1.0 (1.16 vs 0.64 for random), so
+  lower similarity accounts for only part of the time gap. `src/diagnose_time.py` shows that
+  CHEMBL203 mixes wild-type and mutant-EGFR assays (L858R/T790M/C797S…). Mutant records rise
+  from 2% of records (≤2010) to 50% (2022+), and newer compounds are more potent (mean pIC50 7.32
+  vs 6.88 in train; the model underpredicts by 0.52 on average). The time-split test set is
+  therefore partly a **different endpoint**, so its gap combines real prospective difficulty
+  with a change in the assays. This confounder is listed under Bảng 3.
+
 ## Caveats
+
+- CHEMBL203 IC50 values are not filtered by EGFR variant or assay type. This follows the fixed
+  design, but it mostly affects the time split (see above). A wild-type, binding-assay-only
+  rerun would be a sensitivity analysis and is not part of this design.
 
 - This uses one target, one featurization and one model. Treat it as an illustration of the
   mechanism, not as a general conclusion (see the report's FAQ).

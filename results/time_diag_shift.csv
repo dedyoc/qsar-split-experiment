@@ -1,0 +1,2 @@
+cutoff_year,train_mean_pIC50,test_mean_pIC50,mean_bias_pred_minus_true,pearson_r,rmse_after_removing_bias
+2022,6.885,7.32,-0.516,0.178,1.299

@@ -1,0 +1,4 @@
+Cách chia,RMSE (trung bình ± SD),R² (trung bình ± SD),Độ tương đồng trung vị test–train,Chênh lệch RMSE so với random,n_train,n_test
+Random,0.687 ± 0.019,0.726 ± 0.013,0.82 ± 0.00,—,8551,2138
+Scaffold,0.794 ± 0.046,0.628 ± 0.028,0.74 ± 0.01,+0.107 (+16%),8551,2138
+Time,1.398 ± 0.003,-0.294 ± 0.006,0.51 ± 0.00,+0.711 (+103%),9090,1560

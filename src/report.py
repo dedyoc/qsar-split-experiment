@@ -86,6 +86,21 @@ def main():
         "không phản ánh biến thiên của cách chia.",
         "- Chênh lệch RMSE = RMSE trung bình (cách chia) − RMSE trung bình (Random).",
     ]
+    bins = config.RESULTS_DIR / "rmse_by_similarity_bin.csv"
+    if bins.exists():
+        b = pd.read_csv(bins).set_index(["split", "bin"]).rmse_mean
+        top = config.SIM_BIN_LABELS[-1]
+        notes.append(
+            f"- RMSE theo bin {top}: Random {b['random', top]:.2f}, Scaffold {b['scaffold', top]:.2f}, "
+            f"Time {b['time', top]:.2f} — ở Time, sai số cao ngay cả khi test rất giống train, nên gap "
+            "của Time không chỉ do độ tương đồng thấp (xem results/rmse_by_similarity_bin.csv).")
+    diag = config.RESULTS_DIR / "time_diag_by_period.csv"
+    if diag.exists():
+        p = pd.read_csv(diag).set_index("period")
+        notes.append(
+            f"- Lưu ý (gây nhiễu cho Time split): CHEMBL203 gộp cả assay EGFR đột biến; tỉ lệ bản ghi "
+            f"đột biến tăng từ {p.frac_mutant.iloc[0]:.0%} (≤2010) lên {p.frac_mutant.iloc[-1]:.0%} "
+            "(2022+), nên tập test của Time một phần là endpoint khác (xem src/diagnose_time.py).")
     cols = [c for c in table.columns if not c.startswith("n_")]
     md = ("**Bảng 3. Kết quả thí nghiệm**\n\n" + table[cols].to_markdown(index=False)
           + "\n\n" + "\n".join(notes) + "\n")

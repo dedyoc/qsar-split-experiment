@@ -11,6 +11,8 @@ Outputs:
   results/metrics_per_run.csv  one row per (split, seed)
   results/predictions.csv      one row per test compound per run
 """
+import time
+
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
@@ -39,18 +41,27 @@ def run_one(df, X, fps, split, seed):
 
 
 def main():
+    """Run all (split, seed) pairs, writing both CSVs after every run.
+
+    Results are saved incrementally so a crash keeps finished runs, and
+    progress lines are flushed so they show up when output goes to a file.
+    """
     df, X, fps = load()
     metrics, preds = [], []
+    n_runs = len(config.SPLITS) * len(config.SEEDS)
     for split in config.SPLITS:
         for seed in config.SEEDS:
+            t0 = time.time()
             m, p = run_one(df, X, fps, split, seed)
-            print(f"[train_eval] {split:8s} seed={seed} n_train={m['n_train']} "
-                  f"n_test={m['n_test']} RMSE={m['rmse']:.3f} R2={m['r2']:.3f} "
-                  f"median_maxsim={m['median_max_sim']:.3f}")
             metrics.append(m)
             preds.append(p)
-    pd.DataFrame(metrics).to_csv(config.RESULTS_DIR / "metrics_per_run.csv", index=False)
-    pd.concat(preds).to_csv(config.RESULTS_DIR / "predictions.csv", index=False)
+            pd.DataFrame(metrics).to_csv(config.RESULTS_DIR / "metrics_per_run.csv", index=False)
+            pd.concat(preds).to_csv(config.RESULTS_DIR / "predictions.csv", index=False)
+            print(f"[train_eval] run {len(metrics)}/{n_runs} {split:8s} seed={seed} "
+                  f"n_train={m['n_train']} n_test={m['n_test']} RMSE={m['rmse']:.3f} "
+                  f"R2={m['r2']:.3f} median_maxsim={m['median_max_sim']:.3f} "
+                  f"({time.time() - t0:.0f}s)", flush=True)
+    print("[train_eval] done", flush=True)
 
 
 if __name__ == "__main__":

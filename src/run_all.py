@@ -1,4 +1,5 @@
-"""Run the whole pipeline: fetch -> clean -> featurize -> train/eval -> similarity -> report.
+"""Run the whole pipeline: fetch -> clean -> featurize -> train/eval -> similarity
+-> (supplementary) time-split diagnostics -> report.
 
 Usage (from the repo root):
     conda activate qsar
@@ -7,6 +8,7 @@ Usage (from the repo root):
 The ChEMBL download is cached in data/raw/, so reruns do not hit the API.
 """
 import clean
+import diagnose_time
 import featurize
 import report
 import similarity
@@ -17,4 +19,5 @@ if __name__ == "__main__":
     featurize.main()
     train_eval.main()
     similarity.main()
+    diagnose_time.main()  # supplementary; cached assay annotations
     report.main()

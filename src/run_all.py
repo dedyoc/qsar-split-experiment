@@ -10,6 +10,8 @@ The ChEMBL download is cached in data/raw/, so reruns do not hit the API.
 import clean
 import diagnose_time
 import featurize
+import plot_seed_results
+import plot_split_diagram
 import report
 import similarity
 import train_eval
@@ -21,3 +23,5 @@ if __name__ == "__main__":
     similarity.main()
     diagnose_time.main()  # supplementary; cached assay annotations
     report.main()
+    plot_split_diagram.main()  # figures for the report (need bang3.csv)
+    plot_seed_results.main()

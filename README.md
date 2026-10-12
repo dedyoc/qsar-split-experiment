@@ -28,6 +28,8 @@ cached in `data/raw/`. Running `python src/fetch.py --force` downloads it again.
 | 6. Similarity | `src/similarity.py` | → `results/rmse_by_similarity_bin*.csv`, `maxsim_distribution.png`, `rmse_by_simbin.png` |
 | (suppl.) | `src/diagnose_time.py` | assay annotations (cached `data/raw/chembl203_assays.csv`) → `results/time_diag_*.csv` |
 | 7. Report | `src/report.py` | → `results/bang3.csv`, `results/bang3.md`, `split_info.csv`, `rmse_r2_by_split.png` |
+| Figures | `src/plot_split_diagram.py` | → `results/split_diagram.png`: how each split assigns train/test, with each split's results |
+| Figures | `src/plot_seed_results.py` | → `results/seed_results.png`: every seed's RMSE, R², similarity; RMSE by similarity bin |
 
 `train_eval.py` writes its CSVs after every run and prints one flushed line per run, so progress
 can be followed with `tail -f`. To log a run: `python -u src/train_eval.py > logs/train_eval.log`.

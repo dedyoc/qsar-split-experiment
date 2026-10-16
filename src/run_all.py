@@ -1,12 +1,4 @@
-"""Run the whole pipeline: fetch -> clean -> featurize -> train/eval -> similarity
--> (supplementary) time-split diagnostics -> report.
-
-Usage (from the repo root):
-    conda activate qsar
-    python src/run_all.py
-
-The ChEMBL download is cached in data/raw/, so reruns do not hit the API.
-"""
+"""Whole pipeline. Run from repo root: python src/run_all.py"""
 import clean
 import diagnose_time
 import featurize
@@ -17,11 +9,11 @@ import similarity
 import train_eval
 
 if __name__ == "__main__":
-    clean.main()        # calls fetch.load_raw(), cached
+    clean.main()
     featurize.main()
     train_eval.main()
     similarity.main()
-    diagnose_time.main()  # supplementary; cached assay annotations
+    diagnose_time.main()  # extra check
     report.main()
-    plot_split_diagram.main()  # figures for the report (need bang3.csv)
+    plot_split_diagram.main()  # needs bang3.csv
     plot_seed_results.main()

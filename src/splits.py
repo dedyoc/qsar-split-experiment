@@ -1,24 +1,9 @@
-"""Step 4 - Train/test splitting strategies.
+"""split(df, seed) -> (train_idx, test_idx), ~20% test.
 
-Every function has the signature  split(df, seed) -> (train_idx, test_idx)
-with positional indices into df, and targets TEST_FRACTION (20%) test.
-
-random   : compounds shuffled individually (sklearn train_test_split).
-
-scaffold : Bemis-Murcko scaffold groups are shuffled with `seed`, then
-           greedily assigned to test as long as the group still fits under
-           the 20% target; everything else goes to train. A scaffold is
-           never in both sets. Greedy "fits under" (instead of "add until
-           over") stops one very large scaffold from blowing up the test
-           set when it is drawn early; large scaffolds therefore end up in
-           train more often - the usual behaviour of balanced scaffold
-           splits (cf. chemprop scaffold_balanced).
-
-time     : compounds with a document_year only. Test = all compounds first
-           published in year >= Y, where the cutoff Y is the year whose
-           test fraction is closest to 20%. Deterministic: `seed` is
-           ignored, so across the 5 runs only the RF seed varies.
-           Compounds with missing year are dropped (count reported).
+scaffold: shuffle scaffold groups, put a group in test only if it still fits
+under 20%, so one huge scaffold can't blow up the test set.
+time: test = year >= cutoff, cutoff chosen so test is closest to 20%.
+Deterministic (seed ignored). Rows without year are dropped.
 """
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -33,7 +18,7 @@ def random_split(df, seed):
 
 
 def scaffold_split(df, seed):
-    groups = df.groupby("scaffold").indices  # scaffold -> array of positions
+    groups = df.groupby("scaffold").indices
     keys = list(groups)
     np.random.default_rng(seed).shuffle(keys)
     target = int(round(config.TEST_FRACTION * len(df)))
@@ -66,7 +51,6 @@ def time_split(df, seed=None):
 
 
 def time_split_info(df):
-    """Facts about the time split for the report."""
     has_year = df.year.notna()
     cutoff = time_cutoff(df.year[has_year].to_numpy())
     return {"cutoff_year": cutoff,

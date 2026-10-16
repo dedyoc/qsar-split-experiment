@@ -1,17 +1,5 @@
-"""Step 6 - Test-to-train similarity analysis.
-
-max_tanimoto(): for each test compound, the highest Tanimoto similarity
-(ECFP4) to any training compound, i.e. similarity to its nearest training
-neighbour. Called from train_eval.py for every run, so each prediction in
-results/predictions.csv carries its own max_sim.
-
-main(): from predictions.csv computes, per split,
-  - median max_sim of the test set (mean ± SD over seeds)
-  - RMSE in max_sim bins 0-0.3, 0.3-0.5, 0.5-0.7, 0.7-1.0 (per run, then
-    mean ± SD over seeds; bins with < 5 compounds in a run are not scored
-    for that run)
-and draws the distribution and RMSE-by-bin plots.
-"""
+"""Max Tanimoto test->train and RMSE per similarity bin.
+Bins with < 5 compounds in a run are not scored for that run."""
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt

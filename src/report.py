@@ -1,17 +1,4 @@
-"""Step 7 - Aggregate runs into Bảng 3 (report Section 6.3).
-
-Columns (as in the report):
-  Cách chia | RMSE (mean ± SD) | R² (mean ± SD) |
-  Độ tương đồng trung vị test–train | Chênh lệch RMSE so với random
-
-- mean ± SD are over the 5 seeds (sample SD, ddof=1).
-- "Độ tương đồng trung vị" = per-run median of max Tanimoto test->train,
-  then mean ± SD over seeds.
-- ΔRMSE = mean RMSE(split) - mean RMSE(random); the % is relative to random.
-
-Outputs results/bang3.csv, results/bang3.md (table + notes ready to paste),
-results/split_info.csv and results/rmse_r2_by_split.png.
-"""
+"""Bang 3 (mean ± SD over 5 seeds) + notes -> results/bang3.csv, bang3.md, split_info.csv"""
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt

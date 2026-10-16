@@ -1,11 +1,4 @@
-"""Step 1 - Download EGFR (CHEMBL203) IC50 activities from the ChEMBL REST API.
-
-The raw table is cached in data/raw/; if the file exists it is reused and no
-request is made. Pass --force to re-download.
-
-Only the columns needed downstream are requested. `document_year` is the
-publication year of the source document and is what the time split uses.
-"""
+"""Download EGFR (CHEMBL203) IC50 from ChEMBL, cached in data/raw/ (--force to redownload)."""
 import argparse
 import time
 
@@ -36,7 +29,6 @@ def _get(url, params=None, retries=5):
 
 
 def download():
-    """Page through /activity and return all records as a DataFrame."""
     url = f"{config.CHEMBL_API}/activity.json"
     params = {
         "target_chembl_id": config.TARGET_CHEMBL_ID,
@@ -54,12 +46,11 @@ def download():
         nxt = page["page_meta"]["next"]
         if not nxt:
             break
-        page = _get("https://www.ebi.ac.uk" + nxt)  # `next` is a path incl. query
+        page = _get("https://www.ebi.ac.uk" + nxt)  # next is a path, not a full url
     return pd.DataFrame(rows, columns=FIELDS)
 
 
 def load_raw(force=False):
-    """Return the raw activity table, downloading only if not cached."""
     if config.RAW_FILE.exists() and not force:
         print(f"[fetch] using cached {config.RAW_FILE.relative_to(config.ROOT)}")
         return pd.read_csv(config.RAW_FILE)

@@ -1,16 +1,5 @@
-"""Figure - how the three split strategies assign compounds to train/test.
-
-Three rows, one per split in splits.py:
-  Random   : schematic; each compound is drawn individually, so the same
-             scaffold (grey box) ends up in both train and test.
-  Scaffold : schematic; whole scaffold groups go to test.
-  Time     : real data; compounds per first-publication year, train < cutoff
-             <= test (cutoff and dropped-year count from split_info.csv).
-Each row is annotated with that split's real results from bang3.csv.
-Labels are in Vietnamese to match the report.
-
-Output: results/split_diagram.png
-"""
+"""Figure: how each split assigns compounds -> results/split_diagram.png
+Random/scaffold rows are schematic, the time row uses the real years."""
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -20,16 +9,15 @@ from matplotlib.patches import FancyBboxPatch
 
 import config
 
-TRAIN, TEST = "#2a78d6", "#eb6834"  # categorical slots 1-2 (validated palette)
+TRAIN, TEST = "#2a78d6", "#eb6834"
 INK, MUTED, BOX = "#0b0b0b", "#52514e", "#e6e5e0"
 
-GROUP_SIZES = [7, 5, 6, 4, 6]       # schematic scaffold groups A-E
-SCAFFOLD_TEST_GROUPS = {1, 4}       # B and E go to test as whole groups
-RANDOM_TEST = {(0, 2), (1, 0), (2, 4), (3, 1), (4, 3), (0, 5)}  # (group, member) ~20%
+GROUP_SIZES = [7, 5, 6, 4, 6]  # fake scaffold groups A-E
+SCAFFOLD_TEST_GROUPS = {1, 4}  # B, E -> test
+RANDOM_TEST = {(0, 2), (1, 0), (2, 4), (3, 1), (4, 3), (0, 5)}  # ~20%
 
 
 def draw_groups(ax, is_test):
-    """Scaffold boxes with one dot per compound; is_test(g, m) -> bool."""
     x0 = 0.0
     for g, n in enumerate(GROUP_SIZES):
         cols = int(np.ceil(n / 2))

@@ -1,13 +1,5 @@
-"""Step 3 - Morgan ECFP4 fingerprints and Bemis-Murcko scaffolds.
-
-Fingerprints: Morgan, radius 2, 2048 bits (ECFP4). Stored both as a dense
-uint8 matrix X (model input) and as RDKit ExplicitBitVects (fast Tanimoto
-in similarity.py; rebuilt on load, not stored).
-
-Scaffold: generic-free Bemis-Murcko scaffold (ring systems + linkers, side
-chains removed) as canonical SMILES. Acyclic molecules get the empty
-scaffold "" and are treated as one group in the scaffold split.
-"""
+"""ECFP4 fingerprints (r=2, 2048 bits) + Bemis-Murcko scaffolds.
+Acyclic molecules get scaffold "" -> one group in the scaffold split."""
 import numpy as np
 import pandas as pd
 from rdkit import Chem, DataStructs
@@ -46,7 +38,6 @@ def main():
 
 
 def load():
-    """Return (dataframe, X, list of bitvects) for downstream steps."""
     df = pd.read_csv(config.CLEAN_FILE, keep_default_na=False,
                      na_values={"year": [""], "pIC50_sd": [""]})
     X = np.load(config.FP_FILE)["X"]

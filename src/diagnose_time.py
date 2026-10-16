@@ -1,17 +1,5 @@
-"""Supplementary - why does the time split fail so badly? (not part of the fixed design)
-
-CHEMBL203 includes assays on mutant EGFR (L858R, T790M, C797S, del19, ...)
-as well as cell-based assays. Their share grows over time, so the time-split
-test set (>= cutoff year) is partly a different endpoint from most of train.
-
-This script fetches assay annotations once (cached in data/raw/), flags a
-record as "mutant" if ChEMBL's variant_sequence names a mutation OR the
-assay description mentions a common EGFR mutation, and writes:
-  results/time_diag_by_period.csv  share of mutant / non-binding records
-                                   and mean pIC50, per publication period
-  results/time_diag_shift.csv      train vs test pIC50 shift and prediction
-                                   bias for the time split (seed 0)
-"""
+"""Extra check, not part of the main design: is the time-split gap partly
+because mutant-EGFR / cell assays become more common in later years?"""
 import numpy as np
 import pandas as pd
 import requests

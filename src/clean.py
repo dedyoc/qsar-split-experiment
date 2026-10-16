@@ -1,22 +1,7 @@
-"""Step 2 - Filter, standardize and aggregate the raw ChEMBL activities.
+"""Filter ChEMBL IC50 records, standardize structures, one pIC50 per compound.
 
-Filters (in order, each logged to results/cleaning_log.csv):
-  1. missing SMILES or standard_value
-  2. standard_type == IC50, standard_relation == "=", standard_units == nM
-  3. standard_value > 0 (needed for the log)
-  4. ChEMBL data_validity_comment set (e.g. "Outside typical range",
-     "Potential transcription error") -> dropped as unreliable
-  5. RDKit cannot parse / standardize the structure
-
-Structure standardization (RDKit rdMolStandardize): Cleanup -> keep largest
-fragment (strips salts/solvents) -> Uncharger -> canonical isomeric SMILES.
-Tautomers are not canonicalized (slow, and Morgan bits are mostly robust to
-the common cases).
-
-pIC50 = 9 - log10(IC50 in nM). Duplicates are grouped by the standardized
-SMILES; the compound gets the MEDIAN pIC50 and the EARLIEST document_year
-(when the compound first appeared in the literature). Compounds without any
-year keep year = NaN; only the time split drops them.
+Duplicates (same standardized SMILES) -> median pIC50, earliest document_year.
+Compounds without a year are kept here, only the time split drops them.
 """
 import numpy as np
 import pandas as pd
@@ -34,7 +19,6 @@ _uncharger = rdMolStandardize.Uncharger()
 
 
 def standardize_smiles(smi):
-    """Return a canonical standardized SMILES, or None if RDKit fails."""
     try:
         mol = Chem.MolFromSmiles(smi)
         if mol is None:

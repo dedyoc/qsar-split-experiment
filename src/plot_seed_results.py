@@ -1,16 +1,4 @@
-"""Figure - results of all 15 runs (3 splits x 5 seeds), every seed shown.
-
-  A  RMSE per seed          dots = individual seeds, bar = mean, whisker = ± SD
-  B  R² per seed            (same)
-  C  Median max-Tanimoto test->train per seed
-  D  RMSE by max-Tanimoto bin, mean ± SD over seeds, with mean n per bin
-
-Time-split dots overlap because that split is deterministic (only the RF
-seed varies). Labels are in Vietnamese to match the report.
-
-Inputs:  results/metrics_per_run.csv, results/rmse_by_similarity_bin.csv
-Output:  results/seed_results.png
-"""
+"""Figure: per-seed RMSE / R2 / median similarity + RMSE by similarity bin -> results/seed_results.png"""
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -19,7 +7,6 @@ import pandas as pd
 
 import config
 
-# categorical slots 1-3 of the validated palette (pass all-pairs CVD checks)
 COLORS = {"random": "#2a78d6", "scaffold": "#eb6834", "time": "#1baf7a"}
 LABELS = {"random": "Random", "scaffold": "Scaffold", "time": "Time"}
 INK, MUTED, GRID = "#0b0b0b", "#52514e", "#e6e5e0"
@@ -45,7 +32,7 @@ def per_seed(ax, metrics, col, ylabel, title, fmt):
         ax.scatter(i + SEED_OFFSETS, m[col], s=40, color=COLORS[split],
                    edgecolor="white", lw=1.2, zorder=5)
         pad = 0.03 * (ax.get_ylim()[1] - ax.get_ylim()[0])
-        if mean >= 0:  # label above the highest seed, or below the lowest if negative
+        if mean >= 0:  # label goes below if mean is negative
             y, va = max(mean + sd, m[col].max()) + pad, "bottom"
         else:
             y, va = min(mean - sd, m[col].min()) - pad, "top"

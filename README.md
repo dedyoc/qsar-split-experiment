@@ -1,7 +1,7 @@
 # QSAR split experiment — random vs scaffold vs time split
 
 This repo holds the code for Section 6 of the report *"Hiệu năng giảm khi chuyển từ random split sang
-scaffold/time split nói lên điều gì?"* (`docs/`). It measures the **generalization gap** of one fixed
+scaffold/time split nói lên điều gì?"*. It measures the **generalization gap** of one fixed
 QSAR model (ECFP4 + random forest) on EGFR IC50 data from ChEMBL under three ways of splitting the
 data, and fills in **Bảng 3**.
 
